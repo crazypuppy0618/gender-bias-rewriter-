@@ -1,0 +1,8 @@
+# Core - stdlib only, no external dependencies
+# server.py uses only Python standard library modules:
+# http.server, json, os, sys, time, uuid, threading,
+# urllib.parse, datetime, socketserver
+
+# If you want to add ML features later:
+# torch
+# transformers

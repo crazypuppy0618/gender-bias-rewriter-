@@ -1,0 +1,140 @@
+{
+  "schema": "gbr-shared-v1",
+  "appVersion": "3.0",
+  "created": "2026-06-05T16:24:30Z",
+  "lastUpdated": "2026-06-08T00:07:47Z",
+  "stats": {
+    "total": 8,
+    "byType": {
+      "detection": 4,
+      "customPattern": 1,
+      "corpus": 3
+    },
+    "byAppVersion": {
+      "3.0": 7,
+      "1.0": 1
+    },
+    "byLanguage": {
+      "zh-CN": 7,
+      "unknown": 1
+    }
+  },
+  "records": [
+    {
+      "id": "det_429fa4f50cfa",
+      "type": "detection",
+      "appVersion": "3.0",
+      "ts": 1780676687589,
+      "data": {
+        "language": "zh-CN",
+        "findingCount": 2,
+        "userChoice": "accept",
+        "rewriteApplied": true,
+        "textLength": 8,
+        "textHash": "54536729",
+        "findingPhrases": [
+          "女拳"
+        ],
+        "findingTypes": [
+          "explicit"
+        ]
+      }
+    },
+    {
+      "id": "cus_e578665ee59a",
+      "type": "customPattern",
+      "appVersion": "3.0",
+      "ts": 1780676687598,
+      "data": {
+        "patternType": "explicit",
+        "patterns": [
+          "测试偏置词"
+        ],
+        "homophones": [
+          "csbpz"
+        ],
+        "rewrite_zh": "中性",
+        "reason_zh": "测试"
+      }
+    },
+    {
+      "id": "cor_bb88cb682ea9",
+      "type": "corpus",
+      "appVersion": "3.0",
+      "ts": 1780676687607,
+      "data": {
+        "text": "男人不应该哭",
+        "language": "zh-CN",
+        "label": "gender-stereotype"
+      }
+    },
+    {
+      "id": "cor_3030e6a2354a",
+      "type": "corpus",
+      "appVersion": "3.0",
+      "ts": 1780676777368,
+      "data": {
+        "text": "端到端测试语料",
+        "language": "zh-CN",
+        "label": "e2e-test"
+      }
+    },
+    {
+      "id": "det_6b921267052a",
+      "type": "detection",
+      "appVersion": "1.0",
+      "ts": 1780676796548,
+      "data": {
+        "language": "zh-CN",
+        "findingCount": 0,
+        "userChoice": "none",
+        "textLength": 11,
+        "textHash": "61078875"
+      }
+    },
+    {
+      "id": "det_3b68135651f9",
+      "type": "detection",
+      "appVersion": "3.0",
+      "ts": 1780676797874,
+      "data": {
+        "language": "zh-CN",
+        "findingCount": 1,
+        "userChoice": "accept",
+        "textLength": 12,
+        "textHash": "99861777"
+      }
+    },
+    {
+      "id": "cor_e3934df1a569",
+      "type": "corpus",
+      "appVersion": "3.0",
+      "ts": 1780677002988,
+      "data": {
+        "text": "女性不适合学理工科",
+        "language": "zh-CN",
+        "label": "stereotype",
+        "notes": "来自新访客的测试提交"
+      }
+    },
+    {
+      "id": "det_09f9e93535b4",
+      "type": "detection",
+      "appVersion": "3.0",
+      "ts": 1780877267466,
+      "data": {
+        "language": "zh-CN",
+        "findingCount": 1,
+        "userChoice": "none",
+        "textLength": 11,
+        "textHash": "83028411",
+        "findingPhrases": [
+          "test"
+        ],
+        "findingTypes": [
+          "explicit"
+        ]
+      }
+    }
+  ]
+}

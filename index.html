@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="pageTitle">EquiWrite — Gender Bias Detection & Rewriting</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <meta name="description" content="EquiWrite: 阻止性别歧视内容的预发布改写提示系统。检测并改写社交媒体帖子中的显式/隐式/善意性别偏置。Pre-publication rewriting prompts against gender bias." />
+  <meta name="application-name" content="EquiWrite" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1 data-i18n="brandTitle">EquiWrite</h1>
+      <p class="subtitle" data-i18n="brandSubtitle">阻止性别歧视内容的预发布改写提示系统 · Pre-publication rewriting prompts against gender bias</p>
+    </div>
+    <div class="controls">
+      <label class="lang-toggle">
+        <span data-i18n="languageLabel">语言</span>
+        <select id="langSelect">
+          <option value="zh-CN">中文</option>
+          <option value="en-US">English</option>
+        </select>
+      </label>
+      <label class="api-key">
+        <span data-i18n="apiKeyLabel">HF API Key</span>
+        <input type="password" id="apiKeyInput" data-i18n-placeholder="apiKeyPlaceholder" placeholder="hf_xxx (可选)" />
+      </label>
+      <button id="saveKeyBtn" class="btn-ghost" data-i18n="saveKey">保存</button>
+      <span id="modeBadge" class="badge badge-offline" data-i18n="offlineMode">离线模式</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="section section-a">
+      <h2 data-i18n="sectionATitle">A · 演示输入区 Demo Input</h2>
+      <p class="hint" data-i18n="sectionAHint">模拟微博/小红书发帖框,输入文本以检测并改写</p>
+      <textarea id="inputText" rows="4" data-i18n-placeholder="inputPlaceholder" placeholder="例:女人太情绪化,不适合做领导。"></textarea>
+      <div class="actions">
+        <button id="detectBtn" class="btn-primary" data-i18n="detectBtn">检测并改写 Detect &amp; Rewrite</button>
+        <button id="loadSampleBtn" class="btn-secondary" data-i18n="sampleBtn">加载示例 Load Sample</button>
+        <button id="clearBtn" class="btn-ghost" data-i18n="clearBtn">清空 Clear</button>
+      </div>
+    </section>
+
+    <section class="section section-b">
+      <h2 data-i18n="sectionBTitle">B · 5 步工作流 5-Step Workflow</h2>
+      <ol class="workflow">
+        <li class="step" data-step="1">
+          <div class="step-icon">1</div>
+          <div class="step-text" data-i18n="step1">User Types 用户输入</div>
+        </li>
+        <li class="arrow">→</li>
+        <li class="step" data-step="2">
+          <div class="step-icon">2</div>
+          <div class="step-text" data-i18n="step2">Lightweight BERT 轻量模型检测</div>
+        </li>
+        <li class="arrow">→</li>
+        <li class="step" data-step="3">
+          <div class="step-icon">3</div>
+          <div class="step-text" data-i18n="step3">Bias Flagged 标记偏置</div>
+        </li>
+        <li class="arrow">→</li>
+        <li class="step" data-step="4">
+          <div class="step-icon">4</div>
+          <div class="step-text" data-i18n="step4">Neutral Rewrite 中性改写</div>
+        </li>
+        <li class="arrow">→</li>
+        <li class="step" data-step="5">
+          <div class="step-icon">5</div>
+          <div class="step-text" data-i18n="step5">User Choice 用户选择</div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="section section-c" id="resultSection" hidden>
+      <h2 data-i18n="sectionCTitle">C · 结果对比 Result Comparison</h2>
+      <div class="result-grid">
+        <div class="result-card">
+          <h3 data-i18n="originalText">原文 Original</h3>
+          <div id="originalView" class="text-view"></div>
+          <div class="legend">
+            <span class="legend-item legend-explicit" data-i18n="legendExplicit">显式 Explicit</span>
+            <span class="legend-item legend-implicit" data-i18n="legendImplicit">隐式 Implicit</span>
+            <span class="legend-item legend-benevolent" data-i18n="legendBenevolent">善意 Benevolent</span>
+          </div>
+        </div>
+        <div class="result-card">
+          <h3 data-i18n="neutralRewrite">中性改写 Neutral Rewrite</h3>
+          <div id="rewriteView" class="text-view"></div>
+          <div id="choiceButtons" class="choice-buttons">
+            <button class="btn-accept" data-choice="accept" data-i18n="accept">Accept 接受</button>
+            <button class="btn-ignore" data-choice="ignore" data-i18n="ignore">Ignore 忽略</button>
+            <button class="btn-learn" data-choice="learn" data-i18n="learnMore">Learn more 了解更多</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-d" id="statsSection">
+      <h2 data-i18n="sectionDTitle">D · 效果统计 Impact Statistics</h2>
+      <div class="stats">
+        <div class="stat-row">
+          <div class="stat-label" data-i18n="beforeIntervention">干预前 Before Intervention</div>
+          <div class="stat-bar"><div class="bar bar-red" style="width:100%"><span>100%</span></div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label" data-i18n="afterIntervention">干预后 After Intervention</div>
+          <div class="stat-bar"><div class="bar bar-green" style="width:68%"><span>68%</span></div></div>
+        </div>
+        <p class="stat-note" data-i18n="statNote">基于试点职场研究,相似原理应用于社交媒体,&gt;30% 偏置语言下降</p>
+      </div>
+      <div class="session-stats">
+        <div class="session-card">
+          <div class="session-num" id="sessionDetected">0</div>
+          <div class="session-label" data-i18n="sessionDetected">本次检测到</div>
+        </div>
+        <div class="session-card">
+          <div class="session-num" id="sessionAccepted">0</div>
+          <div class="session-label" data-i18n="sessionAccepted">已接受改写</div>
+        </div>
+        <div class="session-card">
+          <div class="session-num" id="sessionReduction">0%</div>
+          <div class="session-label" data-i18n="sessionReduction">偏置下降</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-e">
+      <h2 data-i18n="sectionETitle">E · 现状对比 Current vs Solution</h2>
+      <div class="compare-grid">
+        <div class="compare-card compare-fail">
+          <h3 data-i18n="currentApproach">❌ Current Approach 现状</h3>
+          <ol>
+            <li data-i18n="cur1">用户输入 "女人太情绪化"</li>
+            <li data-i18n="cur2">关键词过滤(无脏字 → 通过)</li>
+            <li data-i18n="cur3">"未发现违规"</li>
+            <li data-i18n="cur4">帖子发布 → 敌意与伤害</li>
+          </ol>
+        </div>
+        <div class="compare-card compare-solution">
+          <h3 data-i18n="ourSolution">✅ Our Solution 本方案</h3>
+          <ol>
+            <li data-i18n="our1">用户输入 "女人太情绪化"</li>
+            <li data-i18n="our2">改写提示检测到隐式偏置</li>
+            <li data-i18n="our3">建议中性表达 "人的情绪因人而异"</li>
+            <li data-i18n="our4">用户接受 → 中性发布 → 伤害减少</li>
+          </ol>
+        </div>
+      </div>
+
+      <h3 data-i18n="advantagesTitle">优势 Advantages</h3>
+      <ul class="advantages">
+        <li data-i18n="adv1">✓ 预防胜于删除:在内容扩散前介入</li>
+        <li data-i18n="adv2">✓ 教育而非惩罚:促进长期行为改变</li>
+        <li data-i18n="adv3">✓ 符合监管:对齐中国"清朗"专项与 SDG 5</li>
+        <li data-i18n="adv4">✓ 试点有效:职场研究显示偏置语言 &gt;30% 下降且无用户抵触</li>
+      </ul>
+    </section>
+
+    <section class="section section-f">
+      <h2 data-i18n="sectionFTitle">F · 上下文/谐音检测 Context &amp; Homophone</h2>
+      <p class="hint" data-i18n="sectionFHint">新增能力:否定/转述/反驳语境识别 + 谐音/俚语/缩写/变形拼写检测</p>
+      <div class="context-examples">
+        <div class="ctx-example">
+          <div class="ctx-input">她**不是**女人太情绪化,只是当时压力大</div>
+          <div class="ctx-tag ctx-tag-weak" data-i18n="ctxNegation">否定语境 → 置信度下降</div>
+        </div>
+        <div class="ctx-example">
+          <div class="ctx-input">他批评说"女拳"思维是错误的</div>
+          <div class="ctx-tag ctx-tag-weak" data-i18n="ctxRefutation">反驳语境 → 应被忽略</div>
+        </div>
+        <div class="ctx-example">
+          <div class="ctx-input">有些网友用 nq 攻击女权者</div>
+          <div class="ctx-tag ctx-tag-detected" data-i18n="ctxAbbr">缩写 nq → 女拳</div>
+        </div>
+        <div class="ctx-example">
+          <div class="ctx-input">tī yuán nǚ quán(拼音绕过)</div>
+          <div class="ctx-tag ctx-tag-detected" data-i18n="ctxPinyin">拼音变体 → 田园女权</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-g">
+      <h2 data-i18n="sectionGTitle">G · 检测历史 Detection Log</h2>
+      <p class="hint" data-i18n="sectionGHint">所有检测自动保存到本地数据库(IndexedDB),可查看、导出、清空</p>
+      <div class="log-controls">
+        <button id="refreshLogBtn" class="btn-secondary" data-i18n="refreshLog">刷新 Refresh</button>
+        <button id="exportLogBtn" class="btn-secondary" data-i18n="exportLog">导出 Export JSON</button>
+        <label class="import-label">
+          <span data-i18n="importLog">导入 Import</span>
+          <input type="file" id="importLogInput" accept="application/json" hidden />
+        </label>
+        <button id="clearLogBtn" class="btn-ghost" data-i18n="clearLog">清空 Clear All</button>
+        <span id="logStatus" class="log-status"></span>
+      </div>
+      <div class="log-stats" id="logStats"></div>
+      <div class="log-list" id="logList">
+        <p class="empty-log" data-i18n="emptyLog">暂无检测记录 — 试试在 A 区输入文本并点击"检测并改写"</p>
+      </div>
+    </section>
+
+    <section class="section section-h">
+      <h2 data-i18n="sectionHTitle">H · 自定义模式 Custom Patterns</h2>
+      <p class="hint" data-i18n="sectionHHint">主动添加偏置词及其上下文(同义词、谐音、缩写、改写、解释),丰富检测库。点击 <b>编辑</b> 修改现有词条;所有数据保存在浏览器本地,刷新与升级网站均不会丢失。</p>
+
+      <div class="contributor">
+        <div class="contrib-form" id="contribFormCard">
+          <div id="formEditBanner" class="form-edit-banner" hidden>
+            <span>✎</span>
+            <span id="formEditBannerText" data-i18n="editingPattern">正在编辑:</span>
+            <button id="cancelEditBtn" class="btn-tiny btn-cancel-edit" data-i18n="cancelEdit">取消</button>
+          </div>
+          <div class="form-row">
+            <label>
+              <span data-i18n="formType">类型 Type</span>
+              <select id="newPatternType">
+                <option value="explicit" data-i18n="typeExplicit">显式 Explicit</option>
+                <option value="implicit" data-i18n="typeImplicit">隐式 Implicit</option>
+                <option value="benevolent" data-i18n="typeBenevolent">善意 Benevolent</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="formEnabled">启用 Enabled</span>
+              <select id="newPatternEnabled">
+                <option value="true" data-i18n="yes">是 Yes</option>
+                <option value="false" data-i18n="no">否 No</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            <span data-i18n="formPatternsZh">偏置词(中文) · 多个用逗号分隔</span>
+            <input id="newPatternsZh" type="text" data-i18n-placeholder="formPatternsZhPh" placeholder="例:婚驴, 扶弟魔" />
+          </label>
+          <label>
+            <span data-i18n="formPatternsEn">Patterns (English, comma separated)</span>
+            <input id="newPatternsEn" type="text" data-i18n-placeholder="formPatternsEnPh" placeholder="e.g. femcel, tradwife" />
+          </label>
+          <label>
+            <span data-i18n="formHomophones">谐音/拼音/缩写 (Homonphones / Pinyin / Abbr)</span>
+            <input id="newHomophones" type="text" data-i18n-placeholder="formHomophonesPh" placeholder="例: hun lü, fdm, hnlv" />
+          </label>
+          <label>
+            <span data-i18n="formContext">上下文说明 Context hint</span>
+            <input id="newContext" type="text" data-i18n-placeholder="formContextPh" placeholder="例:常用于贬低已婚女性" />
+          </label>
+          <div class="form-row">
+            <label>
+              <span data-i18n="formRewriteZh">中性改写(中文)</span>
+              <input id="newRewriteZh" type="text" placeholder="例:已婚女性" />
+            </label>
+            <label>
+              <span data-i18n="formRewriteEn">Neutral Rewrite (English)</span>
+              <input id="newRewriteEn" type="text" placeholder="e.g. married woman" />
+            </label>
+          </div>
+          <label>
+            <span data-i18n="formReasonZh">解释(中文)</span>
+            <textarea id="newReasonZh" rows="2" placeholder="例:将已婚女性比作牲畜,属于物化与侮辱"></textarea>
+          </label>
+          <label>
+            <span data-i18n="formReasonEn">Reason (English)</span>
+            <textarea id="newReasonEn" rows="2" placeholder="e.g. Compares married women to livestock, objectifying and insulting."></textarea>
+          </label>
+          <div class="form-actions">
+            <button id="addPatternBtn" class="btn-primary" data-i18n="addPattern">添加到数据库 Add to DB</button>
+            <button id="clearFormBtn" class="btn-ghost" data-i18n="clearForm">清空表单</button>
+            <span id="contribStatus" class="contrib-status"></span>
+          </div>
+        </div>
+
+        <div class="contrib-list" id="contribList">
+          <p class="empty-log" data-i18n="emptyContrib">暂无自定义模式</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-i" id="sharedSection">
+      <h2 data-i18n="sectionITitle">I · 共享词库与语料 Shared Library &amp; Corpus</h2>
+      <p class="hint" data-i18n="sectionIHint">匿名上传的检测记录、自定义词条与语料汇集在此。<b>每次网站更新不覆盖历史</b>;旧版词条按 <code>appVersion</code> 字段保留。</p>
+
+      <div class="shared-status-bar">
+        <span id="sharedStatusDot" class="status-dot status-dot-unknown"></span>
+        <span id="sharedStatusText" data-i18n="sharedStatusUnknown">检测中…</span>
+        <button id="refreshSharedBtn" class="btn-tiny" data-i18n="sharedRefresh">刷新 Refresh</button>
+        <span class="shared-version" id="sharedServerVersion"></span>
+      </div>
+
+      <div class="shared-stats-grid" id="sharedStatsGrid">
+        <div class="shared-stat-card">
+          <div class="shared-stat-num" id="statTotalRecords">—</div>
+          <div class="shared-stat-label" data-i18n="statTotalRecords">总记录数</div>
+        </div>
+        <div class="shared-stat-card">
+          <div class="shared-stat-num" id="statTotalPatterns">—</div>
+          <div class="shared-stat-label" data-i18n="statTotalPatterns">共享词条</div>
+        </div>
+        <div class="shared-stat-card">
+          <div class="shared-stat-num" id="statTotalCorpus">—</div>
+          <div class="shared-stat-label" data-i18n="statTotalCorpus">共享语料</div>
+        </div>
+        <div class="shared-stat-card">
+          <div class="shared-stat-num" id="statTotalDetectionsShared">—</div>
+          <div class="shared-stat-label" data-i18n="statTotalDetectionsShared">检测记录</div>
+        </div>
+        <div class="shared-stat-card">
+          <div class="shared-stat-num" id="statVersionCount">—</div>
+          <div class="shared-stat-label" data-i18n="statVersionCount">历史版本数</div>
+        </div>
+      </div>
+
+      <div class="shared-grid">
+        <div class="shared-card">
+          <h3 data-i18n="sharedSubmitTitle">📤 提交语料 Submit Corpus</h3>
+          <p class="hint" data-i18n="sharedSubmitHint">上传一段含偏置表述的文本语料,帮助丰富共享检测库。所有语料完全匿名,仅含文本+语言+标签。</p>
+          <label>
+            <span data-i18n="sharedCorpusText">语料文本 Corpus Text</span>
+            <textarea id="corpusText" rows="3" data-i18n-placeholder="corpusTextPh" placeholder="例:男人赚钱养家天经地义"></textarea>
+          </label>
+          <div class="form-row">
+            <label>
+              <span data-i18n="sharedCorpusLabel">标签 / 场景</span>
+              <input id="corpusLabel" type="text" data-i18n-placeholder="corpusLabelPh" placeholder="例: workplace, family" />
+            </label>
+            <label>
+              <span data-i18n="sharedCorpusLang">语言</span>
+              <select id="corpusLang">
+                <option value="zh-CN">中文 zh-CN</option>
+                <option value="en-US">English en-US</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-actions">
+            <button id="submitCorpusBtn" class="btn-primary" data-i18n="sharedCorpusSubmit">提交到共享池</button>
+            <span id="corpusStatus" class="contrib-status"></span>
+          </div>
+        </div>
+
+        <div class="shared-card">
+          <h3 data-i18n="sharedPatternsTitle">🌐 共享词条(只读)Shared Patterns</h3>
+          <p class="hint" data-i18n="sharedPatternsHint">由全体访客贡献的偏置词条;本机检测时 <b>不会自动合并</b>(避免冲突),需手动"复制到本地"。</p>
+          <div class="shared-list" id="sharedPatternsList">
+            <p class="empty-log" data-i18n="sharedLoading">加载中…</p>
+          </div>
+        </div>
+
+        <div class="shared-card shared-card-wide">
+          <h3 data-i18n="sharedCorpusTitle">📚 共享语料 Recent Corpus</h3>
+          <p class="hint" data-i18n="sharedCorpusHint">最近 50 条提交。点击可复制到输入区,作为新测试素材。</p>
+          <div class="shared-list" id="sharedCorpusList">
+            <p class="empty-log" data-i18n="sharedLoading">加载中…</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-j" id="blogSection">
+      <h2 data-i18n="sectionJTitle">J · 博文扫描 Blog/Article Scan</h2>
+      <p class="hint" data-i18n="sectionJHint">粘贴长文(微博/公众号/博客),逐句扫描性别偏置,生成整体风险评估报告</p>
+
+      <div class="blog-input-area">
+        <textarea id="blogInput" rows="6" data-i18n-placeholder="blogPlaceholder" placeholder="在此粘贴博文或文章内容…"></textarea>
+        <div class="actions">
+          <button id="blogAnalyzeBtn" class="btn-primary" data-i18n="blogAnalyzeBtn">扫描全文 Scan &amp; Analyze</button>
+          <button id="blogClearBtn" class="btn-ghost" data-i18n="blogClearBtn">清空文章</button>
+          <span id="blogStatus" class="contrib-status"></span>
+        </div>
+      </div>
+
+      <div id="blogResults" class="blog-results" hidden>
+        <div class="blog-risk-bar">
+          <div class="blog-risk-gauge" id="blogRiskGauge">
+            <span class="blog-risk-level" id="blogRiskLevel">—</span>
+            <span class="blog-risk-score" id="blogRiskScore">0%</span>
+          </div>
+          <div class="blog-summary" id="blogSummary"></div>
+        </div>
+
+        <div class="blog-detail-grid">
+          <div class="blog-card">
+            <h3 data-i18n="blogDistribution">偏置类型分布</h3>
+            <div class="blog-distribution" id="blogDistribution">
+              <div class="dist-row"><span class="dist-label">Explicit 显式</span><span class="dist-bar"><span class="dist-fill dist-fill-explicit" id="distExplicit" style="width:0%"></span></span><span class="dist-num" id="distExplicitNum">0</span></div>
+              <div class="dist-row"><span class="dist-label">Implicit 隐式</span><span class="dist-bar"><span class="dist-fill dist-fill-implicit" id="distImplicit" style="width:0%"></span></span><span class="dist-num" id="distImplicitNum">0</span></div>
+              <div class="dist-row"><span class="dist-label">Benevolent 善意</span><span class="dist-bar"><span class="dist-fill dist-fill-benevolent" id="distBenevolent" style="width:0%"></span></span><span class="dist-num" id="distBenevolentNum">0</span></div>
+            </div>
+          </div>
+          <div class="blog-card">
+            <h3 data-i18n="blogStatsBiased">偏置统计</h3>
+            <div class="blog-stats">
+              <div class="blog-stat-item"><span class="blog-stat-num" id="blogStatTotal">0</span><span class="blog-stat-label" data-i18n="blogStatsTotal">总句数</span></div>
+              <div class="blog-stat-item"><span class="blog-stat-num" id="blogStatBiased">0</span><span class="blog-stat-label" data-i18n="blogStatsBiased">含偏置</span></div>
+              <div class="blog-stat-item"><span class="blog-stat-num" id="blogStatFindings">0</span><span class="blog-stat-label" data-i18n="blogStatsFindings">总标记</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="blog-card blog-card-wide">
+          <h3 data-i18n="blogTopBiased">偏置最严重的句子</h3>
+          <div class="blog-top-list" id="blogTopList">
+            <p class="empty-log" data-i18n="blogNoBias">✓ 未检测到偏置</p>
+          </div>
+        </div>
+
+        <div class="blog-card blog-card-wide">
+          <h3 data-i18n="blogSentenceList">逐句分析</h3>
+          <div class="blog-sentence-list" id="blogSentenceList">
+            <p class="empty-log" data-i18n="blogNoBias">✓ 未检测到偏置</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="blog-divider">
+
+      <h3 class="blog-subsection-title" data-i18n="blogCommentCheckTitle">💬 评论发送前检测 Pre-Publish Comment Check</h3>
+      <p class="hint" data-i18n="blogCommentCheckHint">在评论区输入框里写好评论后,先检测再发送,避免无意中发出含性别偏置的回复</p>
+
+      <div class="comment-check-area">
+        <div class="comment-check-input-wrap">
+          <textarea id="commentInput" rows="3" data-i18n-placeholder="commentCheckPh" placeholder="在此输入你的评论…" maxlength="500"></textarea>
+          <div class="comment-char-count"><span id="commentCharCount">0</span>/500</div>
+        </div>
+        <div class="actions">
+          <button id="commentCheckBtn" class="btn-primary" data-i18n="commentCheckBtn">检测评论 Check Comment</button>
+          <button id="commentClearBtn" class="btn-ghost" data-i18n="commentCheckClear">清空</button>
+          <span id="commentStatus" class="contrib-status"></span>
+        </div>
+      </div>
+
+      <div id="commentResult" class="comment-result" hidden>
+        <div class="comment-result-card" id="commentResultCard">
+          <div class="comment-result-icon" id="commentResultIcon">✓</div>
+          <div class="comment-result-body">
+            <div class="comment-result-header" id="commentResultHeader">未检测到偏置</div>
+            <div class="comment-result-text" id="commentResultText">你的评论没有明显的性别偏置表述,可以安全发送。</div>
+            <div class="comment-result-findings" id="commentResultFindings"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="learnModal" class="modal" hidden>
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="modal-close" id="modalClose" title="Close (Esc)" onclick="closeModalFallback()">&times;</span>
+      <h3 data-i18n="learnTitle">Learn more · 了解更多</h3>
+      <div id="learnBody"></div>
+      <div class="modal-footer">
+        <button id="modalCloseBtn" class="btn-primary" data-i18n="modalClose" onclick="closeModalFallback()">Close 关闭</button>
+        <span class="modal-hint" data-i18n="modalHint">按 Esc 或点击空白处也可关闭</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.closeModalFallback = function() {
+      var m = document.getElementById('learnModal');
+      if (m) {
+        m.hidden = true;
+        m.style.display = 'none';
+        if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+      }
+    };
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' || e.keyCode === 27) closeModalFallback();
+    });
+    document.getElementById('learnModal') && document.getElementById('learnModal').addEventListener('click', function(e) {
+      if (e.target.id === 'learnModal') closeModalFallback();
+    });
+  </script>
+
+  <footer class="footer">
+    <p data-i18n="footer">基于学术海报与论文 "How Pre-Publication Rewriting Prompts Stop Gender-Discriminatory Content" · Xiao Yan (CE2403, 202413000627)</p>
+    <p class="footer-sub" data-i18n="footerSub">引用:CORGI-PM (2023) · Wang et al. (2024) · Wu et al. (2025) · Rahman et al. (2025) · Cyberspace Administration of China (2025)</p>
+  </footer>
+
+  <script type="module" src="js/app.js?v=3"></script>
+  <script type="module" src="js/shared-ui.js?v=3"></script>
+  <script type="module" src="js/blog-scanner.js?v=3"></script>
+</body>
+</html>

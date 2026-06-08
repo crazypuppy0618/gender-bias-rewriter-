@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: gender-bias-detector
+    runtime: python
+    repo: https://github.com/YOUR_USERNAME/gender-bias-rewriter
+    plan: free
+    region: oregon
+    buildCommand: ""
+    startCommand: python3 server.py
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
+      - key: DATA_DIR
+        value: /data
+    disk:
+      name: shared-pool-data
+      mountPath: /data
+      sizeGB: 1

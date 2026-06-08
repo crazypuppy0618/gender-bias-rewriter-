@@ -1,0 +1,385 @@
+{
+  "version": 3,
+  "contextRules": {
+    "negators": [
+      "不是", "不认为", "反对", "讨厌", "反感", "拒绝", "并非", "不要", "不能", "不可以",
+      "不应该", "别", "不会", "没", "没有", "不", "否", "否定", "质疑", "批评", "反驳", "辟谣",
+      "doesn't mean", "not all", "i disagree", "i hate", "i reject", "no, ", "actually,"
+    ],
+    "quoteIndicators": [
+      "说", "写道", "表示", "认为", "觉得", "听说", "说:", "写道:", "表示:", "说：", "写道：", "表示：",
+      "他称", "她称", "据称", "声称", "叫做", "被称为", "所谓", "口中", "眼里", "心目中",
+      "said", "wrote", "claims", "according to", "called her", "called him", "so-called"
+    ],
+    "reinforcers": [
+      "就是", "果然", "不愧是", "毕竟", "本来", "绝对", "肯定", "一定", "都", "总是", "永远",
+      "全", "全部", "一个比一个", "个个", "往往", "常常", "经常", "压根", "骨子里", "本质上",
+      "老", "老在", "天天", "成天", "整天",
+      "literally", "absolutely", "definitely", "all of them", "every single", "always", "truly"
+    ],
+    "dismissiveFrames": [
+      "女孩子嘛", "她毕竟", "女生嘛", "她只是", "他只是", "毕竟是个", "说到底", "归根到底", "归根结底",
+      "本质上就是", "骨子里就是", "不就是个", "不过是个", "无非是个",
+      "girls will be girls", "boys will be boys", "she's just", "he's just"
+    ],
+    "compoundBiasPatterns": [
+      "女人+都+[verb]", "男人+都+[verb]", "女生+[adjective]+的",
+      "嫁出去的女儿", "娶媳妇", "彩礼", "嫁人", "娶老婆", "娶个老婆",
+      "生儿子", "生女儿", "传宗接代", "延续香火", "养老", "养儿防老"
+    ]
+  },
+  "patterns": [
+    {
+      "id": "imp-01",
+      "type": "implicit",
+      "patterns": ["女人太情绪化", "女性太情绪化", "女人情绪化", "女人爱哭", "女人不讲理"],
+      "patterns_en": ["women are too emotional", "women are emotional", "girls are too emotional", "women are irrational"],
+      "rewrite_zh": "人的情绪因人而异",
+      "rewrite_en": "People's emotions vary individually",
+      "reason_zh": "将情绪化与女性绑定,强化性别刻板印象,忽视个体差异。",
+      "reason_en": "Ties emotionality to women as a group, reinforcing a gender stereotype and ignoring individual variation."
+    },
+    {
+      "id": "imp-02",
+      "type": "implicit",
+      "patterns": ["女人不适合做领导", "女性不适合做领导", "女人当不了领导", "女人做不好领导"],
+      "patterns_en": ["women can't lead", "women are not suited for leadership", "women make bad leaders"],
+      "rewrite_zh": "领导能力与个人素养相关",
+      "rewrite_en": "Leadership ability depends on the individual",
+      "reason_zh": "将领导能力与性别绑定,属于能力性别化的隐性偏见。",
+      "reason_en": "Assigns leadership capacity by gender rather than by individual merit."
+    },
+    {
+      "id": "imp-03",
+      "type": "implicit",
+      "patterns": ["女生学不好理科", "女生逻辑差", "女生不适合学工科", "女孩数学不好", "女生学不好数学"],
+      "patterns_en": ["girls are bad at math", "women are bad at science", "girls can't do stem", "girls are bad at science"],
+      "rewrite_zh": "学科能力因人而异,与性别无关",
+      "rewrite_en": "Academic ability varies by individual, not by gender",
+      "reason_zh": "学科能力性别化是 STEM 领域性别差距的文化根源之一。",
+      "reason_en": "Gendered assumptions about academic ability help sustain STEM gender gaps."
+    },
+    {
+      "id": "imp-04",
+      "type": "implicit",
+      "patterns": ["男人都爱撒谎", "男人没一个好东西", "男人都花心", "男人都不是好东西"],
+      "patterns_en": ["all men lie", "men are all cheaters", "men are all the same"],
+      "rewrite_zh": "个别行为不应被泛化为性别特征",
+      "rewrite_en": "Individual behaviour should not be generalised to a gender",
+      "reason_zh": "将个别行为上升为对整个性别的负面概括,属于群体污名化。",
+      "reason_en": "Generalising individual behaviour to an entire gender is collective stigmatisation."
+    },
+    {
+      "id": "imp-05",
+      "type": "implicit",
+      "patterns": ["女司机", "女司机就是不行", "女生方向感差", "女人不会开车"],
+      "patterns_en": ["women drivers", "women are bad drivers", "women have no sense of direction"],
+      "rewrite_zh": "驾驶技能因人而异",
+      "rewrite_en": "Driving skill varies by individual",
+      "reason_zh": "以性别为单位评价驾驶能力,属典型能力性别化偏见。",
+      "reason_en": "Evaluates driving ability by gender — a classic ability-gendering bias."
+    },
+    {
+      "id": "imp-06",
+      "type": "implicit",
+      "patterns": ["头发长见识短", "头发长", "头发长 见识短"],
+      "patterns_en": ["long hair short mind", "long hair short thoughts"],
+      "rewrite_zh": "(建议直接删除该表达)",
+      "rewrite_en": "(consider deleting the expression entirely)",
+      "reason_zh": "用外貌/发型贬低女性智力,源自传统父权文化。",
+      "reason_en": "Insults women's intelligence via their appearance — a long-standing patriarchal trope."
+    },
+    {
+      "id": "ben-01",
+      "type": "benevolent",
+      "patterns": ["男人应该养家", "男人必须赚钱养家", "男人就该承担所有经济责任"],
+      "patterns_en": ["men should provide", "men must be the breadwinner", "a man's job is to earn"],
+      "rewrite_zh": "家庭经济责任应由家庭成员共同承担",
+      "rewrite_en": "Family financial responsibilities should be shared",
+      "reason_zh": "\"养家\" 看似褒扬男性,实则将经济重担性别化,限制伴侣选择。",
+      "reason_en": "Framed as praise, yet it gender-loads economic burden and constrains partners' choices."
+    },
+    {
+      "id": "ben-02",
+      "type": "benevolent",
+      "patterns": ["女人需要被保护", "女孩子就应该被宠着", "女人不适合抛头露面"],
+      "patterns_en": ["women need to be protected", "girls should be pampered", "women should stay out of the spotlight"],
+      "rewrite_zh": "每个人都拥有自主选择生活方式的平等权利",
+      "rewrite_en": "Everyone has an equal right to choose their own way of life",
+      "reason_zh": "保护主义表达看似关怀,实则限制了女性的自主权与公共参与。",
+      "reason_en": "Paternalistic framing limits women's autonomy and public participation, even when phrased as care."
+    },
+    {
+      "id": "ben-03",
+      "type": "benevolent",
+      "patterns": ["女孩子嘛不用太拼", "女生不用那么努力", "嫁个好人家就行了", "女孩子嘛", "她毕竟是个女孩"],
+      "patterns_en": ["girls don't need to work that hard", "women don't need to push themselves", "she just needs to marry well", "girls will be girls"],
+      "rewrite_zh": "每个人都应享有同等的奋斗与发展的机会",
+      "rewrite_en": "Everyone deserves equal opportunity to strive and grow",
+      "reason_zh": "以关怀之名削弱女性的职业发展预期,属于善意的性别歧视。",
+      "reason_en": "Disguised as care, this lowers expectations for women's careers — a textbook benevolent sexism pattern."
+    },
+    {
+      "id": "ben-04",
+      "type": "benevolent",
+      "patterns": ["女孩子要乖巧", "女孩子要文静", "女生要温柔", "女孩子要听话"],
+      "patterns_en": ["girls should be obedient", "girls should be quiet", "girls should be gentle", "good girls should"],
+      "rewrite_zh": "性格表达应基于个人意愿,而非性别期待",
+      "rewrite_en": "Personality expression should follow personal preference, not gender expectations",
+      "reason_zh": "将\"乖巧文静\"作为对女性的统一期待,压抑个性发展。",
+      "reason_en": "Imposing 'gentle and quiet' as a universal female standard suppresses individuality."
+    },
+    {
+      "id": "exp-01",
+      "type": "explicit",
+      "patterns": ["剩女", "剩斗士", "齐天大剩"],
+      "patterns_en": ["leftover women", "leftover woman"],
+      "rewrite_zh": "单身女性",
+      "rewrite_en": "single women",
+      "reason_zh": "将未婚女性污名化为\"剩余\",物化与贬损并重。",
+      "reason_en": "Stigmatises unmarried women as 'leftover' — an overtly objectifying and demeaning term."
+    },
+    {
+      "id": "exp-02",
+      "type": "explicit",
+      "patterns": ["娘炮", "娘娘腔", "男不男女不女", "娘们儿似的", "像个娘们"],
+      "patterns_en": ["sissy", "feminine boy", "not a real man", "like a girl", "throws like a girl"],
+      "rewrite_zh": "不符合传统性别气质表达的男性",
+      "rewrite_en": "men who don't conform to traditional masculinity norms",
+      "reason_zh": "通过攻击男性气质的偏差来强化二元性别规范,属于恐同式性别歧视。",
+      "reason_en": "Enforces a binary gender norm by attacking men who deviate from it — a form of homophobic sexism."
+    },
+    {
+      "id": "exp-03",
+      "type": "explicit",
+      "patterns": ["拜金女", "绿茶婊", "绿茶", "白莲花", "圣母婊", "公主病"],
+      "patterns_en": ["gold digger", "slut-shaming slur", "pick-me girl", "princess syndrome"],
+      "rewrite_zh": "(建议删除整体表达,以中性描述替代)",
+      "rewrite_en": "(consider deleting the expression and describing the situation neutrally)",
+      "reason_zh": "针对女性外貌/性行为/性格的侮辱性标签,属显式性别歧视。",
+      "reason_en": "Insulting label targeting women's appearance, sexuality, or personality — explicit sexism."
+    },
+    {
+      "id": "exp-04",
+      "type": "explicit",
+      "patterns": ["田园女权", "女拳", "拳师", "女拳师"],
+      "patterns_en": ["fake feminist slur", "femi-nazi"],
+      "rewrite_zh": "(建议直接删除该词)",
+      "rewrite_en": "(consider deleting the term entirely)",
+      "reason_zh": "将女性主义污名化,压制合理诉求,属于显式歧视。",
+      "reason_en": "Stigmatises feminism and silences legitimate calls for equality — explicit sexism."
+    },
+    {
+      "id": "exp-05",
+      "type": "explicit",
+      "patterns": ["母狗", "母老虎", "贱人", "婊子", "破鞋"],
+      "patterns_en": ["bitch", "slut", "whore"],
+      "rewrite_zh": "(强烈建议删除该侮辱性词汇)",
+      "rewrite_en": "(strongly recommend deleting the slur)",
+      "reason_zh": "针对女性的严重侮辱性词汇。",
+      "reason_en": "Severe gendered insult."
+    },
+    {
+      "id": "exp-06",
+      "type": "explicit",
+      "patterns": ["坦克", "坦克女", "猪扒", "恐龙"],
+      "patterns_en": ["tank (body-shaming)", "ugly woman"],
+      "rewrite_zh": "(建议删除,以外貌无关的中性描述替代)",
+      "rewrite_en": "(consider deleting and using appearance-neutral description)",
+      "reason_zh": "针对女性身体的污名化标签。",
+      "reason_en": "Body-shaming label targeting women."
+    },
+    {
+      "id": "exp-07",
+      "type": "explicit",
+      "patterns": ["赔钱货", "扶弟魔", "伏弟魔", "扶弟", "伏地魔"],
+      "patterns_en": ["loss-making goods (daughter)", "brother-magnet sister"],
+      "rewrite_zh": "家中子女不应被工具化",
+      "rewrite_en": "Children in a family should not be instrumentalised",
+      "reason_zh": "将女性视为家庭经济负担,或强迫其承担兄弟责任,属家庭层面的性别歧视。",
+      "reason_en": "Frames daughters as a financial burden or obligates sisters to support brothers — familial-level sexism."
+    },
+    {
+      "id": "exp-08",
+      "type": "explicit",
+      "patterns": ["婚驴", "婚骗", "骗婚"],
+      "patterns_en": ["marriage mule", "marriage fraud (slur)"],
+      "rewrite_zh": "(建议删除该侮辱性词汇)",
+      "rewrite_en": "(consider deleting the slur)",
+      "reason_zh": "针对已婚/再婚女性的侮辱性标签。",
+      "reason_en": "Slur targeting married or remarried women."
+    },
+    {
+      "id": "exp-09",
+      "type": "explicit",
+      "patterns": ["直男癌", "凤凰男", "妈宝男"],
+      "patterns_en": ["mansplaining man", "phoenix man", "mama's boy (slur)"],
+      "rewrite_zh": "(建议以具体行为描述替代标签)",
+      "rewrite_en": "(consider describing specific behaviours instead of using labels)",
+      "reason_zh": "虽针对男性,但本质是用污名化标签消解具体行为问题。",
+      "reason_en": "Targets men, but uses stigmatising labels that flatten real behaviour issues."
+    },
+    {
+      "id": "hom-01",
+      "type": "explicit",
+      "isHomophone": true,
+      "patterns": ["小仙女(讽刺)", "小仙女的日常"],
+      "patterns_en": ["little fairy (sarcastic)"],
+      "rewrite_zh": "如果用于讽刺,可改为\"对某人有特定期待的人\"",
+      "rewrite_en": "If used sarcastically, consider neutral rephrasing",
+      "reason_zh": "\"小仙女\" 在某些语境下被用作讽刺,暗含对女性高要求的嘲笑。",
+      "reason_en": "In some contexts, 'little fairy' is used sarcastically to mock women with high standards.",
+      "contextHints": ["小仙女", "小仙女们", "我们小仙女"]
+    },
+    {
+      "id": "hom-02",
+      "type": "implicit",
+      "isHomophone": true,
+      "patterns": ["不是女权是女拳"],
+      "patterns_en": ["femi-nazi pun"],
+      "rewrite_zh": "(删除该词)",
+      "rewrite_en": "(delete the term)",
+      "reason_zh": "\"女权\" 的\"权\"被谐音为\"拳\",本就是污名化手法。",
+      "reason_en": "Substitutes 'rights' with 'fist' as a homophone — itself a stigmatisation tactic."
+    },
+    {
+      "id": "hom-03",
+      "type": "explicit",
+      "isHomophone": true,
+      "patterns": ["彩礼", "天价彩礼"],
+      "patterns_en": ["bride price", "exorbitant bride price"],
+      "rewrite_zh": "婚姻中的经济安排应基于双方协商",
+      "rewrite_en": "Financial arrangements in marriage should be mutually agreed",
+      "reason_zh": "\"彩礼\" 在重男轻女语境下常与对女性的物化、买卖式婚配相关。",
+      "reason_en": "Bride price discussions in patriarchal contexts often objectify women and reduce marriage to transaction.",
+      "contextHints": ["天价彩礼", "彩礼钱", "彩礼给多少", "要彩礼"]
+    },
+    {
+      "id": "hom-04",
+      "type": "implicit",
+      "isHomophone": true,
+      "patterns": ["嫁出去的女儿", "嫁出去的女儿泼出去的水", "娶媳妇"],
+      "patterns_en": ["married daughter is thrown water", "marry a wife"],
+      "rewrite_zh": "婚姻是双方独立个体的结合",
+      "rewrite_en": "Marriage is a partnership between two independent individuals",
+      "reason_zh": "将出嫁女儿视为\"泼出去的水\"强化了从夫居传统;\"娶媳妇\"将女性客体化为被获取的对象。",
+      "reason_en": "Treats a married daughter as 'poured-out water' (lost to her birth family), reinforcing patrilocal tradition; 'marrying a wife' objectifies women as something to be acquired."
+    },
+    {
+      "id": "hom-05",
+      "type": "implicit",
+      "isHomophone": true,
+      "patterns": ["女德", "女德班", "女德教育"],
+      "patterns_en": ["female virtue", "women's virtue training"],
+      "rewrite_zh": "(该概念本身存在争议,建议避免使用)",
+      "rewrite_en": "(this concept is contested, recommend avoiding)",
+      "reason_zh": "\"女德\" 文化以传统美德之名限制女性言行,常出现在争议性培训中。",
+      "reason_en": "Framed as traditional virtue, 'female virtue' is used in controversial training to restrict women's behaviour."
+    },
+    {
+      "id": "hom-06",
+      "type": "explicit",
+      "isHomophone": true,
+      "patterns": ["13点", "二百五", "三八"],
+      "patterns_en": ["silly woman (Shanghai dialect)"],
+      "rewrite_zh": "(建议删除该侮辱性数字俚语)",
+      "rewrite_en": "(recommend deleting the gendered numeric slur)",
+      "reason_zh": "特定地区/年龄用数字代指\"愚蠢的女性\",数字背后是性别化的侮辱。",
+      "reason_en": "Numeric puns historically code 'foolish woman' in certain dialects — gendered insult in number form."
+    },
+    {
+      "id": "hom-07",
+      "type": "implicit",
+      "isHomophone": true,
+      "patterns": ["生儿子", "生女儿就好了", "传宗接代", "延续香火", "养儿防老"],
+      "patterns_en": ["must have a son", "continue the family line"],
+      "rewrite_zh": "子女价值不取决于性别",
+      "rewrite_en": "A child's value does not depend on gender",
+      "reason_zh": "将\"生儿子\"视为传宗接代、养老手段,体现强烈的重男轻女文化。",
+      "reason_en": "Treating 'having a son' as the means of family continuation and elder care reflects entrenched son preference."
+    },
+    {
+      "id": "hom-08",
+      "type": "implicit",
+      "isHomophone": true,
+      "patterns": ["贤妻良母", "男主外女主内", "相夫教子"],
+      "patterns_en": ["virtuous wife, good mother", "men outside, women inside"],
+      "rewrite_zh": "家庭与社会角色应由个人自主选择",
+      "rewrite_en": "Family and social roles should be chosen by the individual",
+      "reason_zh": "将女性角色限定为家庭服务,固化性别分工。",
+      "reason_en": "Confines women to domestic service roles and cements gendered division of labour."
+    },
+    {
+      "id": "hom-09",
+      "type": "implicit",
+      "isHomophone": true,
+      "patterns": ["她说:女人", "她称:女人"],
+      "patterns_en": ["she said: women"],
+      "rewrite_zh": "考虑上下文——若为引用,可在前面加\"据某人称\"或加引号",
+      "rewrite_en": "Consider context — if quoting, attribute to the source",
+      "reason_zh": "包含引述标记时,可能是用户在引用他人观点而非表达偏见。需结合上下文判断。",
+      "reason_en": "When quotation markers are present, the user may be citing others, not asserting. Context-sensitive detection.",
+      "contextHints": ["她说", "他称", "据", "声称", "所谓"]
+    },
+    {
+      "id": "imp-07",
+      "type": "implicit",
+      "patterns": ["一个男的", "你一个大男人", "一个大男人", "男人家"],
+      "patterns_en": ["you're a man, act like it", "a grown man (dismissive)"],
+      "rewrite_zh": "情感表达是每个人的自由，与性别无关",
+      "rewrite_en": "Emotional expression is everyone's right, regardless of gender",
+      "reason_zh": "用「你一个男的/一个大男人」来否定或贬低某种行为（如哭泣、示弱），是典型的毒性男子气概，强化男性不能流露情感的刻板印象。",
+      "reason_en": "Using 'you're a man' to dismiss or shame certain behaviours (crying, vulnerability) enforces toxic masculinity — the stereotype that men must suppress emotion."
+    },
+    {
+      "id": "imp-08",
+      "type": "implicit",
+      "patterns": ["男人哭", "男的哭", "男孩哭", "男儿有泪不轻弹", "男人流血不流泪", "男人不能哭", "男人不该哭"],
+      "patterns_en": ["men don't cry", "boys don't cry", "real men don't cry", "big boys don't cry"],
+      "rewrite_zh": "哭泣是健康的情感宣泄，与性别无关",
+      "rewrite_en": "Crying is a healthy emotional release, not gendered",
+      "reason_zh": "「男儿有泪不轻弹」「男人不能哭」否认男性的情感表达权利，是毒性男子气概的核心信条。",
+      "reason_en": "'Men don't cry' denies men the right to emotional expression and is a core tenet of toxic masculinity."
+    },
+    {
+      "id": "imp-09",
+      "type": "implicit",
+      "patterns": ["像个男人", "像不像个男人", "是不是男人", "是男人吗", "算不算男人", "有点男人样", "男人一点", "像个男子汉"],
+      "patterns_en": ["be a man", "act like a man", "man up", "are you a man", "real men"],
+      "rewrite_zh": "一个人的价值不由是否符合性别刻板印象来定义",
+      "rewrite_en": "A person's worth is not defined by conforming to gender stereotypes",
+      "reason_zh": "「像个男人」「是男人吗」将特定行为模式强制绑定为男性标准，排斥不符合的人，压制个体多样性。",
+      "reason_en": "'Be a man' / 'Are you a man' enforces a narrow, rigid standard of masculinity and punishes deviation."
+    },
+    {
+      "id": "imp-10",
+      "type": "implicit",
+      "patterns": ["男人不该", "男人不能", "男的不该", "男人不可以", "男人不能", "男子汉大丈夫", "男儿当自强"],
+      "patterns_en": ["men shouldn't", "real men don't", "a man never", "man enough"],
+      "rewrite_zh": "行为选择因人而异，不应被性别角色束缚",
+      "rewrite_en": "Behavioural choices vary by individual, not by gender role",
+      "reason_zh": "「男人不该/不能」对男性行为进行规范性限制，强化二元性别角色分工。",
+      "reason_en": "'Men shouldn't / can't' imposes normative restrictions on male behaviour."
+    },
+    {
+      "id": "imp-11",
+      "type": "implicit",
+      "patterns": ["你一个女人", "她一个女人", "一个女人家", "你一个女人家", "他一个女人"],
+      "patterns_en": ["you're a woman, so (dismissive)", "for a woman"],
+      "rewrite_zh": "任何性别都不应因身份而被预设行为方式",
+      "rewrite_en": "No one's behaviour should be predetermined by gender",
+      "reason_zh": "用「你一个女人/女人家」来限制或评判行为，属于隐性性别偏见。",
+      "reason_en": "Using 'you're a woman' to dismiss or judge behaviour is an implicit gender bias."
+    },
+    {
+      "id": "imp-12",
+      "type": "benevolent",
+      "patterns": ["一个女孩子", "一个女孩", "一个小女孩"],
+      "patterns_en": ["she's just a girl", "just a girl"],
+      "rewrite_zh": "能力与成就与性别无关",
+      "rewrite_en": "Ability and achievement are not gendered",
+      "reason_zh": "用「一个女孩子」来预设能力不足或需要特殊照顾，属于善意的性别歧视。",
+      "reason_en": "Using 'just a girl' to assume lower ability or need for protection is benevolent sexism."
+    }
+  ]
+}
